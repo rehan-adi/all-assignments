@@ -1,9 +1,8 @@
-
-const express = require("express");
-const authRoutes = require("./routes/auth");
-const todoRoutes = require("./routes/todo");
-const cors = require("cors");
-const dbconnect  = require("./db/index");
+import express from "express";
+import authRoutes from "./routes/auth";
+import todoRoutes from "./routes/todo";
+import cors from "cors";
+import {dbconnect}  from "./db/index";
 
 
 const port = 3000;
