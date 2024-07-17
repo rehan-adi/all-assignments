@@ -10,7 +10,13 @@ export const authenticateJwt = (req: Request, res: Response, next: NextFunction)
       if (err) {
         return res.sendStatus(403);
       }
-      req.userId = user.id;
+      if(!user) {
+         return res.sendStatus(403);
+      }
+      if(typeof user === 'string') {
+         return res.sendStatus(403);
+      }
+      req.headers["userId"] = user.id;
       next();
     });
   } else {

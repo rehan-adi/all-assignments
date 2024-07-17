@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import express from 'express';
 import  { authenticateJwt, SECRET } from "../middleware/";
-import { User } from "../models/todo.model";
+import User from "../models/todo.model";
 
 const router = express.Router();
 
@@ -30,7 +30,8 @@ const router = express.Router();
   });
 
     router.get('/me', authenticateJwt, async (req, res) => {
-      const user = await User.findOne({ _id: req.userId });
+      const userId = req.headers["UserId"]
+      const user = await User.findOne({ _id: userId });
       if (user) {
         res.json({ username: user.username });
       } else {

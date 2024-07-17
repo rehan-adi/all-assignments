@@ -15,16 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const express_1 = __importDefault(require("express"));
 const middleware_1 = require("../middleware/");
-const todo_model_1 = require("../models/todo.model");
+const todo_model_1 = __importDefault(require("../models/todo.model"));
 const router = express_1.default.Router();
 router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
-    const user = yield todo_model_1.User.findOne({ username });
+    const user = yield todo_model_1.default.findOne({ username });
     if (user) {
         res.status(403).json({ message: 'User already exists' });
     }
     else {
-        const newUser = new todo_model_1.User({ username, password });
+        const newUser = new todo_model_1.default({ username, password });
         yield newUser.save();
         const token = jsonwebtoken_1.default.sign({ id: newUser._id }, middleware_1.SECRET, { expiresIn: '1h' });
         res.json({ message: 'User created successfully', token });
@@ -32,7 +32,7 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
 }));
 router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
-    const user = yield todo_model_1.User.findOne({ username, password });
+    const user = yield todo_model_1.default.findOne({ username, password });
     if (user) {
         const token = jsonwebtoken_1.default.sign({ id: user._id }, middleware_1.SECRET, { expiresIn: '1h' });
         res.json({ message: 'Logged in successfully', token });
@@ -42,7 +42,8 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 router.get('/me', middleware_1.authenticateJwt, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield todo_model_1.User.findOne({ _id: req.userId });
+    const userId = req.headers["UserId"];
+    const user = yield todo_model_1.default.findOne({ _id: userId });
     if (user) {
         res.json({ username: user.username });
     }
