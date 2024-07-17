@@ -1,21 +1,13 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-});
-
-const todoSchema = new mongoose.Schema({
-    title: String,
-    description: String,
-    done: Boolean,
-    userId: String,
-});
-
-const User = mongoose.model('User', userSchema);
-const Todo = mongoose.model('Todo', todoSchema);
-
-module.exports = {
-    User,
-    Todo
+const dbconnect = async() => {
+   try {
+     await mongoose.connect('mongodb://localhost:27017/courses', { dbName: "courses" });
+     console.log('Connected to Mongo database');
+   } catch (error) {
+      console.error("DB connect failed", error);
+      process.exit(1);
+   }
 }
+
+module.exports = dbconnect;
